@@ -18,12 +18,12 @@ extern "C" void CreateReport(Value& request,
                              Value& response,
                              Document::AllocatorType& allocator,
                              CServerInterface* server) {
-    std::cout << "" << std::endl;
+    struct DayData {
+        std::string day;
+        double commission;
+        double profit;
+    };
 
-    std::vector<TradeRecord> trades;
-    int ret = server->GetAllOpenTrades( &trades);
-
-    struct DayData { std::string day; double commission; double profit; };
     std::vector<DayData> data = {
         {"Mon", 120.5, 80.2},
         {"Tue", 150.3, 95.6},
