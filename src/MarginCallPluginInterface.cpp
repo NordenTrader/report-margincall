@@ -18,6 +18,11 @@ extern "C" void CreateReport(Value& request,
                              Value& response,
                              Document::AllocatorType& allocator,
                              CServerInterface* server) {
+    std::vector<TradeRecord> closed_trades;
+    int ret = server->GetCloseTradesByLogin(2, &closed_trades);
+
+    std::cout << "Closed trades count: " << closed_trades.size() << std::endl;
+
     struct DayData {
         std::string day;
         double commission;
