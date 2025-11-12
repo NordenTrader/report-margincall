@@ -20,16 +20,17 @@ extern "C" void CreateReport(rapidjson::Value& request,
                              CServerInterface* server) {
     std::cout << "Creating margin call report.." << std::endl;
 
-    std::vector<TradeRecord> closed_trades;
+    std::vector<AccountRecord> accounts;
+    const std::string group = "demo";
     int result = 2;
 
     LogJSON("request", request);
 
-    // try {
-    //     result = server->GetCloseTradesByLogin(2, &closed_trades);
-    // } catch (const std::exception& e) {
-    //     std::cerr << e.what() << std::endl;
-    // }
+    try {
+        result = server->GetAccountsByGroup(group, &accounts);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     struct DayData {
         std::string day;
