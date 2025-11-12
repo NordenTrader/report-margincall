@@ -368,7 +368,17 @@ enum {
     TR_REASON_API = 7
 };
 
-enum { REPORT_RANGE_TYPE, REPORT_DAILY_TYPE };
+enum {
+    REPORT_NONE_TYPE,               // report without filter
+    REPORT_RANGE_TYPE,              // report filter with time range
+    REPORT_DAILY_TYPE,              // report filter by one day
+    REPORT_ACCOUNT_TYPE,            // report filter by account
+    REPORT_GROUP_TYPE,              // report filter with group mask
+    REPORT_RANGE_GROUP_TYPE,        // report filter with time range and group mask
+    REPORT_DAILY_GROUP_TYPE,        // report filter one day and group mask
+    REPORT_RANGE_ACCOUNT_TYPE,      // report filter with time range and account
+    REPORT_DAILY_ACCOUNT_TYPE       // report filter by one day and account
+};
 
 enum {
     ACTIVATION_NONE = 0,
