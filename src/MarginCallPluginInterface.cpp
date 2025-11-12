@@ -62,7 +62,7 @@ extern "C" void CreateReport(Value& request,
     };
 
     Node report = div({
-        h1({ text(test_string) }),
+        h1({ text("Margin Call Report") }),
         makeTable(data)
     }, props({{"className", "report"}}));
 
