@@ -19,7 +19,12 @@ extern "C" void CreateReport(Value& request,
                              Document::AllocatorType& allocator,
                              CServerInterface* server) {
     std::vector<TradeRecord> closed_trades;
-    int ret = server->GetCloseTradesByLogin(2, &closed_trades);
+
+    try {
+        int ret = server->GetCloseTradesByLogin(2, &closed_trades);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     std::cout << "Closed trades count: " << closed_trades.size() << std::endl;
 
