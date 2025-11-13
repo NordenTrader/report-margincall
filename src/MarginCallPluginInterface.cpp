@@ -44,63 +44,47 @@ extern "C" void CreateReport(rapidjson::Value& request,
             th({ text("Free Margin") }),
             th({ text("Margin Limits") }),
             th({ text("Margin Level") }),
-            // th({ text("Add. Margin") }),
-            // th({ text("Currency") }),
+            th({ text("Currency") }),
         }));
 
         // Формирование строк
         for (const auto& account :accounts_vector) {
-            double floating_pl = 0.0;
-            double margin = 0.0;
-
             // Открытые сделки аккаунта
             std::vector<TradeRecord> trades_vector;
 
             if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
-                for (const auto& trade : trades_vector) {
-                    double trade_profit = 0.0;
-                    double trade_swap = 0.0;
-                    double trade_commission = 0.0;
-                    double trade_margin = 0.0;
+                double floating_pl = 0.0;
+                MarginLevel margin_level_struct;
 
-                    server->CalculateProfit(trade, &trade_profit);
-                    server->CalculateSwap(trade, &trade_swap);
-                    server->CalculateCommission(trade, &trade_commission);
-                    server->CalculateMargin(trade, &trade_margin);
+                server->GetAccountBalanceByLogin(account.login, &margin_level_struct);
 
-                    floating_pl += trade_profit + trade_swap + trade_commission;
-                    margin += trade_margin;
-                }
+                floating_pl = margin_level_struct.equity - margin_level_struct.balance;
+
+                std::cout << "=================" << std::endl;
+                std::cout << "Login: " << account.login << std::endl;
+                std::cout << "Name: " << account.name << std::endl;
+                std::cout << "Leverage: " << margin_level_struct.leverage << std::endl;
+                std::cout << "Balance: " << margin_level_struct.balance << std::endl;
+                std::cout << "Credit: " << margin_level_struct.credit << std::endl;
+                std::cout << "Floating P/L: " << floating_pl << std::endl;
+                std::cout << "Equity: " << margin_level_struct.equity << std::endl;
+                std::cout << "Margin: " << margin_level_struct.margin << std::endl;
+                std::cout << "Free Margin: " << margin_level_struct.margin_free << std::endl;
+                std::cout << "Margin Level: " << margin_level_struct.margin_level << std::endl;
+
+                table_rows.push_back(tr({
+                    td({ text(std::to_string(account.login)) }),
+                    td({ text(account.name) }),
+                    td({ text(std::to_string(margin_level_struct.leverage)) }),
+                    td({ text(std::to_string(margin_level_struct.balance)) }),
+                    td({ text(std::to_string(margin_level_struct.credit)) }),
+                    td({ text(std::to_string(floating_pl)) }),
+                    td({ text(std::to_string(margin_level_struct.equity)) }),
+                    td({ text(std::to_string(margin_level_struct.margin)) }),
+                    td({ text(std::to_string(margin_level_struct.margin_free)) }),
+                    td({ text(std::to_string(margin_level_struct.margin_level)) }),
+                }));
             }
-
-            const double equity = account.balance + account.credit + floating_pl;
-            const double free_margin = equity - margin;
-            const double margin_level = margin > 0.0 ? (equity / margin) * 100.0 : 0.0;
-
-            std::cout << "=================" << std::endl;
-            std::cout << "Login: " << account.login << std::endl;
-            std::cout << "Name: " << account.name << std::endl;
-            std::cout << "Leverage: " << account.leverage << std::endl;
-            std::cout << "Balance: " << account.balance << std::endl;
-            std::cout << "Credit: " << account.credit << std::endl;
-            std::cout << "Floating P/L: " << floating_pl << std::endl;
-            std::cout << "Equity: " << equity << std::endl;
-            std::cout << "Margin: " << margin << std::endl;
-            std::cout << "Free Margin: " << free_margin << std::endl;
-            std::cout << "Margin Level: " << margin_level << std::endl;
-
-            table_rows.push_back(tr({
-                td({ text(std::to_string(account.login)) }),
-                td({ text(account.name) }),
-                td({ text(std::to_string(account.leverage)) }),
-                td({ text(std::to_string(account.balance)) }),
-                td({ text(std::to_string(account.credit)) }),
-                td({ text(std::to_string(floating_pl)) }),
-                td({ text(std::to_string(equity)) }),
-                td({ text(std::to_string(margin)) }),
-                td({ text(std::to_string(free_margin)) }),
-                td({ text(std::to_string(margin_level)) }),
-            }));
         }
 
         return table(table_rows, props({{"className", "data-table"}}));
