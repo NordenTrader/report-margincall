@@ -44,21 +44,49 @@ extern "C" void CreateReport(rapidjson::Value& request,
             th({ text("Free Margin") }),
             th({ text("Margin Limits") }),
             th({ text("Margin Level") }),
-            th({ text("Add. Margin") }),
-            th({ text("Currency") }),
+            // th({ text("Add. Margin") }),
+            // th({ text("Currency") }),
         }));
 
         // Формирование строк
         for (const auto& account :accounts_vector) {
-            double floating_pl = 0.0;
-            double margin_used = 0.0;
+            double pl = 0.0;
+            double margin = 0.0;
 
             // Открытые сделки аккаунта
             std::vector<TradeRecord> trades_vector;
 
-            const int result = server->GetOpenTradesByLogin(account.login, &trades_vector);
+            if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
+                for (const auto& trade : trades_vector) {
+                    double trade_profit = 0.0;
+                    double swap = 0.0;
+                    double commission = 0.0;
+                    double trade_margin = 0.0;
 
-            std::cout << "GetOpenTradesByLogin: " << result << std::endl;
+                    server->CalculateProfit(trade, &trade_profit);
+                    server->CalculateSwap(trade, &swap);
+                    server->CalculateCommission(trade, &commission);
+                    server->CalculateMargin(trade, &margin);
+
+                    pl += trade_profit + swap + commission;
+                    margin += trade_margin;
+                }
+            }
+
+            const double equity = account.balance + account.credit + margin;
+            const double free_margin = equity - margin;
+            const double margin_level = margin > 0.0 ? (equity / margin) * 100.0 : 0.0;
+
+            std::cout << "Login: " << account.login << std::endl;
+            std::cout << "Name: " << account.name << std::endl;
+            std::cout << "Leverage: " << account.leverage << std::endl;
+            std::cout << "Balance: " << account.balance << std::endl;
+            std::cout << "Credit: " << account.credit << std::endl;
+            std::cout << "Floating P/L: " << pl << std::endl;
+            std::cout << "Equity: " << equity << std::endl;
+            std::cout << "Margin: " << margin << std::endl;
+            std::cout << "Free Margin: " << free_margin << std::endl;
+            std::cout << "Margin Level: " << margin_level << std::endl;
 
             table_rows.push_back(tr({
                 td({ text(std::to_string(account.login)) }),
@@ -66,6 +94,11 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 td({ text(std::to_string(account.leverage)) }),
                 td({ text(std::to_string(account.balance)) }),
                 td({ text(std::to_string(account.credit)) }),
+                td({ text(std::to_string(pl)) }),
+                td({ text(std::to_string(equity)) }),
+                td({ text(std::to_string(margin)) }),
+                td({ text(std::to_string(free_margin)) }),
+                td({ text(std::to_string(margin_level)) }),
             }));
         }
 
