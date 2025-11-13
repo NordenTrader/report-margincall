@@ -20,17 +20,23 @@ extern "C" void CreateReport(rapidjson::Value& request,
                              CServerInterface* server) {
     LogJSON("request: ", request);
 
+    std::string group_mask;
+    if (request.HasMember("group") && request["group"].IsString()) {
+        group_mask = request["group"].GetString();
+    }
+
     std::vector<GroupRecord> groups;
     std::vector<AccountRecord> accounts;
 
-    const int groups_result = server->GetAllGroups(&groups);
-    // if (group_result != 0) {
-    //
-    // }
+    if (group_mask == "*") {
+        const int groups_result = server->GetAllGroups(&groups);
 
-     for (const GroupRecord& group : groups) {
-         server->GetAccountsByGroup(group.group, &accounts);
-     }
+        for (const GroupRecord& group : groups) {
+            server->GetAccountsByGroup(group.group, &accounts);
+        }
+    } else {
+        server->GetAccountsByGroup(group_mask, &accounts);
+    }
 
     std::cout << "Groups size: " << groups.size()<< std::endl;
     std::cout << "Accounts size: " << accounts.size()<< std::endl;
