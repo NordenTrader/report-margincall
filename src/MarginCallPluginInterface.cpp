@@ -18,67 +18,51 @@ extern "C" void CreateReport(rapidjson::Value& request,
                              rapidjson::Value& response,
                              rapidjson::Document::AllocatorType& allocator,
                              CServerInterface* server) {
-    LogJSON("request: ", request);
-
     std::string group_mask;
     if (request.HasMember("group") && request["group"].IsString()) {
         group_mask = request["group"].GetString();
     }
 
-    std::vector<GroupRecord> groups_vector;
     std::vector<AccountRecord> accounts_vector;
-    std::vector<TradeRecord> trades_vector;
 
     server->GetAccountsByGroup(group_mask, &accounts_vector);
 
-    // if (group_mask == "*") {
-    //     const int groups_result = server->GetAllGroups(&groups_vector);
-    //
-    //     for (const GroupRecord& group : groups_vector) {
-    //         server->GetAccountsByGroup(group.group, &accounts_vector);
-    //     }
-    // } else {
-    //     server->GetAccountsByGroup(group_mask, &accounts_vector);
-    // }
-
-    std::cout << "Groups vector size: " << groups_vector.size()<< std::endl;
-    std::cout << "Accounts vector size: " << accounts_vector.size()<< std::endl;
-
     // Таблица
-    // auto make_table = [&](const std::vector<AccountRecord>& accounts) -> Node {
-    //     std::vector<Node> table_rows;
-    //
-    //     // Заголовки
-    //     table_rows.push_back(tr({
-    //         th({ text("Login") }),
-    //         th({ text("Name") }),
-    //         th({ text("Leverage") }),
-    //         th({ text("Balance") }),
-    //         th({ text("Credit") }),
-    //         th({ text("Floating P/L") }),
-    //         th({ text("Equity") }),
-    //         th({ text("Margin") }),
-    //         th({ text("Free Margin") }),
-    //         th({ text("Margin Limits") }),
-    //         th({ text("Margin Level") }),
-    //         th({ text("Add. Margin") }),
-    //         th({ text("Currency") }),
-    //     }));
-    //
-    //     return table(table_rows, props({{"className", "data-table"}}));
-    // };
-    //
-    // const Node report = div({
-    //     h1({ text("Margin Call Report") }),
-    //     make_table(accounts_vector)
-    // }, props({{"className", "report"}}));
-    //
-    // to_json(report, response, allocator);
-}
+    auto make_table = [&](const std::vector<AccountRecord>& accounts) -> Node {
+        std::vector<Node> table_rows;
 
-void LogJSON(const std::string& name, const Value& value) {
-    StringBuffer buffer;
-    Writer<StringBuffer> writer(buffer);
-    value.Accept(writer);
-    std::cout << "[LogJSON]: " << name << ": " << buffer.GetString() << std::endl;
+        // Заголовки
+        table_rows.push_back(tr({
+            th({ text("Login") }),
+            th({ text("Name") }),
+            th({ text("Leverage") }),
+            th({ text("Balance") }),
+            th({ text("Credit") }),
+            th({ text("Floating P/L") }),
+            th({ text("Equity") }),
+            th({ text("Margin") }),
+            th({ text("Free Margin") }),
+            th({ text("Margin Limits") }),
+            th({ text("Margin Level") }),
+            th({ text("Add. Margin") }),
+            th({ text("Currency") }),
+        }));
+
+        for (const auto& account :accounts_vector) {
+            // Добавляем строку таблицы
+            table_rows.push_back(tr({
+                td({ text(std::to_string(account.login)) }),
+                td({ text(account.name) }),
+            }));
+        }
+
+        return table(table_rows, props({{"className", "data-table"}}));
+    };
+
+    const Node report = div({
+        h1({ text("Margin Call Report") }),
+        make_table(accounts_vector)
+    }, props({{"className", "report"}}));
+
+    to_json(report, response, allocator);
 }
