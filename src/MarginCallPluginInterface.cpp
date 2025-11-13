@@ -18,7 +18,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
                              rapidjson::Value& response,
                              rapidjson::Document::AllocatorType& allocator,
                              CServerInterface* server) {
-    std::cout << "Creating margin call report.." << std::endl;
+    std::cout << "Creating margin call report" << std::endl;
 
     std::vector<AccountRecord> accounts;
     const std::string group = "demo";
@@ -26,11 +26,13 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     LogJSON("request", request);
 
-    try {
-        result = server->GetAccountsByGroup(group, &accounts);
-    } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-    }
+    // try {
+    //     result = server->GetAccountsByGroup(group, &accounts);
+    // } catch (const std::exception& e) {
+    //     std::cerr << e.what() << std::endl;
+    // }
+
+    result = server->GetAccountsByGroup(group, &accounts);
 
     std::cout << "Result: " <<  result << std::endl;
     std::cout << "Accounts size: " <<  accounts.size() << std::endl;
