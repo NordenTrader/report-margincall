@@ -29,9 +29,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
     std::vector<AccountRecord> accounts_vector;
     std::vector<TradeRecord> trades_vector;
 
-    server->GetAllOpenTrades(&trades_vector);
-    std::cout << "Trade vector size: " << trades_vector.size()<< std::endl;
-
     if (group_mask == "*") {
         const int groups_result = server->GetAllGroups(&groups_vector);
 

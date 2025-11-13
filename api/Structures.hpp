@@ -673,61 +673,70 @@ struct MarginLevel {
 };
 
 struct AccountRecord {
-    int login = 0;
-    std::string group;
-    std::string password;
+    // --- Учетные данные пользователя ---
+    int login = 0;                     // Логин пользователя (уникальный идентификатор)
+    std::string group;                 // Группа пользователя (например, "Admin", "Trader")
+    std::string password;              // Пароль (обычно в зашифрованном виде)
 
-    int enable = 1;
-    int enable_change_password;
-    int enable_read_only;
-    int enable_otp;
-    int enable_reserved[2];
+    // --- Параметры доступа ---
+    int enable = 1;                     // Статус учетной записи (1 - активна, 0 - заблокирована)
+    int enable_change_password;         // Разрешено ли менять пароль (1 - да, 0 - нет)
+    int enable_read_only;               // Режим "Только просмотр" (1 - нельзя торговать)
+    int enable_otp;                     // Включена ли двухфакторная аутентификация (OTP)
+    int enable_reserved[2];             // Зарезервированные параметры
 
-    std::string password_investor;
-    std::string password_phone;
+    // --- Альтернативные пароли ---
+    std::string password_investor;      // Пароль инвестора (режим "Только просмотр")
+    std::string password_phone;         // Пароль для подтверждения операций по телефону
 
-    std::string name;
-    std::string country;
-    std::string city;
-    std::string state;
-    std::string zipcode;
-    std::string address;
-    std::string lead_source;
-    std::string phone;
-    std::string email;
-    std::string comment;
-    std::string id;
-    std::string status;
+    // --- Личная информация ---
+    std::string name;                   // Полное имя пользователя
+    std::string country;                // Страна проживания
+    std::string city;                   // Город проживания
+    std::string state;                  // Область/штат
+    std::string zipcode;                // Почтовый индекс
+    std::string address;                // Адрес проживания
+    std::string lead_source;            // Источник привлечения клиента (например, "Реклама", "Партнер")
+    std::string phone;                  // Контактный телефон
+    std::string email;                  // Электронная почта
+    std::string comment;                // Дополнительный комментарий к пользователю
+    std::string id;                     // Идентификационный номер (паспорт, ИНН)
+    std::string status;                 // Статус клиента (например, "Active", "VIP", "Blocked")
 
-    time_t regdate;
-    time_t lastdate;
+    // --- Временные метки ---
+    time_t regdate;                     // Дата регистрации пользователя в системе
+    time_t lastdate;                    // Дата последнего входа в систему
 
-    int leverage;
-    int agent_account;
-    time_t timestamp;
-    int last_ip;
+    // --- Финансовые параметры ---
+    int leverage;                           // Кредитное плечо (например, 1:100, 1:500) // только для форекс
+    int agent_account;                      // ID реферального агента (если есть)
+    time_t timestamp;                       // Временная метка последнего обновления данных
+    int last_ip;                            // Последний IP-адрес входа (в числовом формате)
 
-    double balance;
-    double prevmonthbalance;
-    double prevbalance;
+    double balance;                         // Текущий баланс пользователя дублирующий он равен сумме позиций
+    double prevmonthbalance;                // Баланс на конец предыдущего месяца
+    double prevbalance;                     // Баланс на конец предыдущего дня
 
-    double credit;
-    double interestrate;
-    double taxes;
-    double prevmonthequity;
-    double prevequity;
-    double reserved2[2];
+    double credit;                          // Кредитные средства (если были предоставлены)
+    double interestrate;                    // Процентная ставка (например, по депозиту)
+    double taxes;                           // Налоговые удержания
+    double prevmonthequity;                 // Эквити (чистые средства) на конец предыдущего месяца
+    double prevequity;                      // Эквити на конец предыдущего дня
+    double reserved2[2];                    // Зарезервированные значения для будущего использования
 
-    std::string otp_secret;
-    std::string secure_reserved;
-    int send_reports;
-    int mqid;
+    // --- Параметры безопасности ---
+    std::string otp_secret;                 // Секретный ключ для генерации одноразовых паролей (OTP)
+    std::string secure_reserved;            // Зарезервированные параметры безопасности
+    int send_reports;                       // Флаг отправки отчетов на e-mail (1 - да, 0 - нет)
+    int mqid;                               // Идентификатор в системе MQ
 
-    std::string user_color = "#ffffff";
+    std::string user_color = "#ffffff";        // Цветовая метка пользователя в системе (например, для VIP-клиентов)
+    // --- Дополнительные зарезервированные данные ---
+    std::string unused;                // Зарезервированные данные (на будущее расширение системы)
+    std::string api_data;              // Данные для API-интеграции
+    MarginLevel margin;                // todo как идея
 
-    std::string unused;
-    std::string api_data;
-    MarginLevel margin;
+    int db_state = DbStateType::DB_NO_CHANGE;
 };
 
 
