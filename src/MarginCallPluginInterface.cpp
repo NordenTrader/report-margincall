@@ -77,6 +77,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
             const double free_margin = equity - margin;
             const double margin_level = margin > 0.0 ? (equity / margin) * 100.0 : 0.0;
 
+            std::cout << "=================" << std::endl;
             std::cout << "Login: " << account.login << std::endl;
             std::cout << "Name: " << account.name << std::endl;
             std::cout << "Leverage: " << account.leverage << std::endl;
@@ -87,6 +88,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
             std::cout << "Margin: " << margin << std::endl;
             std::cout << "Free Margin: " << free_margin << std::endl;
             std::cout << "Margin Level: " << margin_level << std::endl;
+            std::cout << "=================" << std::endl;
 
             table_rows.push_back(tr({
                 td({ text(std::to_string(account.login)) }),
