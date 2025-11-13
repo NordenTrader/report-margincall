@@ -59,16 +59,16 @@ extern "C" void CreateReport(rapidjson::Value& request,
             if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
                 for (const auto& trade : trades_vector) {
                     double trade_profit = 0.0;
-                    double swap = 0.0;
-                    double commission = 0.0;
+                    double trade_swap = 0.0;
+                    double trade_commission = 0.0;
                     double trade_margin = 0.0;
 
                     server->CalculateProfit(trade, &trade_profit);
-                    server->CalculateSwap(trade, &swap);
-                    server->CalculateCommission(trade, &commission);
-                    server->CalculateMargin(trade, &margin);
+                    server->CalculateSwap(trade, &trade_swap);
+                    server->CalculateCommission(trade, &trade_commission);
+                    server->CalculateMargin(trade, &trade_margin);
 
-                    pl += trade_profit + swap + commission;
+                    pl += trade_profit + trade_swap + +trade_commission;
                     margin += trade_margin;
                 }
             }
