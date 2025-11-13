@@ -48,13 +48,28 @@ extern "C" void CreateReport(rapidjson::Value& request,
             th({ text("Currency") }),
         }));
 
+        // Формирование строк
         for (const auto& account :accounts_vector) {
-            // Добавляем строку таблицы
+            double floating_pl = 0.0;
+            double margin_used = 0.0;
+
+            // Открытые сделки аккаунта
+            std::vector<TradeRecord> trades_vector;
+
+            const int result = server->GetOpenTradesByLogin(account.login, &trades_vector);
+
+            std::cout << "GetOpenTradesByLogin: " << result << std::endl;
+
             table_rows.push_back(tr({
                 td({ text(std::to_string(account.login)) }),
                 td({ text(account.name) }),
+                td({ text(std::to_string(account.leverage)) }),
+                td({ text(std::to_string(account.balance)) }),
+                td({ text(std::to_string(account.credit)) }),
             }));
         }
+
+
 
         return table(table_rows, props({{"className", "data-table"}}));
     };
