@@ -24,8 +24,20 @@ extern "C" void CreateReport(rapidjson::Value& request,
     }
 
     std::vector<AccountRecord> accounts_vector;
+    std::vector<GroupRecord> groups_vector;
 
     server->GetAccountsByGroup(group_mask, &accounts_vector);
+    server->GetAllGroups(&groups_vector);
+
+    // Фнкция для поиска валюты аккаунта по его группе
+    auto get_group_currency = [&](const std::string& group_name) -> std::string {
+        for (const auto& group : groups_vector) {
+            if (group.group == group_name) {
+                return group.currency;
+            }
+        }
+        return "N/A"; // если вдруг группа не найдена
+    };
 
     // Таблица
     auto make_table = [&](const std::vector<AccountRecord>& accounts) -> Node {
@@ -59,6 +71,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 server->GetAccountBalanceByLogin(account.login, &margin_level_struct);
 
                 floating_pl = margin_level_struct.equity - margin_level_struct.balance;
+                std::string currency = get_group_currency(account.group);
 
                 std::cout << "=================" << std::endl;
                 std::cout << "Login: " << account.login << std::endl;
@@ -71,6 +84,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 std::cout << "Margin: " << margin_level_struct.margin << std::endl;
                 std::cout << "Free Margin: " << margin_level_struct.margin_free << std::endl;
                 std::cout << "Margin Level: " << margin_level_struct.margin_level << std::endl;
+                std::cout << "Currency: " << currency << std::endl;
                 std::cout << "=================" << std::endl;
 
                 table_rows.push_back(tr({
@@ -84,6 +98,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
                     td({ text(std::to_string(margin_level_struct.margin)) }),
                     td({ text(std::to_string(margin_level_struct.margin_free)) }),
                     td({ text(std::to_string(margin_level_struct.margin_level)) }),
+                    td({ text(currency) }),
                 }));
             }
         }
