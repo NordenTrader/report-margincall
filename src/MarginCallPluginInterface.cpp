@@ -42,7 +42,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     server->GetAccountsByGroup(group_mask, &accounts_vector);
     server->GetAllGroups(&groups_vector);
 
-    // Фнкция для поиска валюты аккаунта по его группе
+    // Лямбда для поиска валюты аккаунта по его группе
     auto get_group_currency = [&](const std::string& group_name) -> std::string {
         for (const auto& group : groups_vector) {
             if (group.group == group_name) {
@@ -50,6 +50,11 @@ extern "C" void CreateReport(rapidjson::Value& request,
             }
         }
         return "N/A"; // группа не найдена - валюта не определена
+    };
+
+    // Лямбда для округления до 2х знаков
+    auto round_to_two_digits = [](double value) -> double{
+        return std::round(value * 100.0) / 100.0;
     };
 
     // Таблица
@@ -88,10 +93,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
                 auto& total = totals_map[currency];
 
-                // Заполняем валюту (один раз)
                 total.currency = currency;
-
-                // Калькуляция
                 total.balance     += margin_level_struct.balance;
                 total.credit      += margin_level_struct.credit;
                 total.floating_pl += floating_pl;
@@ -102,14 +104,14 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 std::cout << "=================" << std::endl;
                 std::cout << "Login: " << account.login << std::endl;
                 std::cout << "Name: " << account.name << std::endl;
-                std::cout << "Leverage: " << margin_level_struct.leverage << std::endl;
-                std::cout << "Balance: " << margin_level_struct.balance << std::endl;
-                std::cout << "Credit: " << margin_level_struct.credit << std::endl;
-                std::cout << "Floating P/L: " << floating_pl << std::endl;
-                std::cout << "Equity: " << margin_level_struct.equity << std::endl;
-                std::cout << "Margin: " << margin_level_struct.margin << std::endl;
-                std::cout << "Free Margin: " << margin_level_struct.margin_free << std::endl;
-                std::cout << "Margin Level: " << margin_level_struct.margin_level << std::endl;
+                std::cout << "Leverage: " << round_to_two_digits(margin_level_struct.leverage) << std::endl;
+                std::cout << "Balance: " << round_to_two_digits(margin_level_struct.balance) << std::endl;
+                std::cout << "Credit: " << round_to_two_digits(margin_level_struct.credit) << std::endl;
+                std::cout << "Floating P/L: " << round_to_two_digits(floating_pl) << std::endl;
+                std::cout << "Equity: " << round_to_two_digits(margin_level_struct.equity) << std::endl;
+                std::cout << "Margin: " << round_to_two_digits(margin_level_struct.margin) << std::endl;
+                std::cout << "Free Margin: " << round_to_two_digits(margin_level_struct.margin_free) << std::endl;
+                std::cout << "Margin Level: " << round_to_two_digits(margin_level_struct.margin_level) << std::endl;
                 std::cout << "Currency: " << currency << std::endl;
                 std::cout << "=================" << std::endl;
 
@@ -153,13 +155,13 @@ extern "C" void CreateReport(rapidjson::Value& request,
         for (const auto& pair : totals_map) {
             const Total& total = pair.second;
 
-            std::cout << "Currency: "     << total.currency      << std::endl;
-            std::cout << "  Balance: "    << total.balance       << std::endl;
-            std::cout << "  Credit: "     << total.credit        << std::endl;
-            std::cout << "  Floating P/L: " << total.floating_pl << std::endl;
-            std::cout << "  Equity: "     << total.equity        << std::endl;
-            std::cout << "  Margin: "     << total.margin        << std::endl;
-            std::cout << "  Free Margin: "<< total.margin_free   << std::endl;
+            std::cout << "  Balance: " << round_to_two_digits(total.balance) << std::endl;
+            std::cout << "  Credit: " << round_to_two_digits(total.credit) << std::endl;
+            std::cout << "  Floating P/L: " << round_to_two_digits(total.floating_pl) << std::endl;
+            std::cout << "  Equity: " << round_to_two_digits(total.equity) << std::endl;
+            std::cout << "  Margin: " << round_to_two_digits(total.margin) << std::endl;
+            std::cout << "  Free Margin: " << round_to_two_digits(total.margin_free) << std::endl;
+            std::cout << "  Currency: " << total.currency << std::endl;
             std::cout << "=================" << std::endl;
         }
 
