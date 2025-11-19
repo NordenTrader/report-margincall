@@ -113,6 +113,19 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 total.margin += margin_level_struct.margin;
                 total.margin_free += margin_level_struct.margin_free;
 
+                std::cout << "=================" << std::endl;
+                std::cout << "Login: " << account.login << std::endl;
+                std::cout << "Name: " << account.name << std::endl;
+                std::cout << "Leverage: " << margin_level_struct.leverage << std::endl;
+                std::cout << "Balance: " << margin_level_struct.balance << std::endl;
+                std::cout << "Credit: " << margin_level_struct.credit << std::endl;
+                std::cout << "Floating P/L: " << floating_pl << std::endl;
+                std::cout << "Equity: " << margin_level_struct.equity << std::endl;
+                std::cout << "Margin: " << margin_level_struct.margin << std::endl;
+                std::cout << "Free Margin: " << margin_level_struct.margin_free << std::endl;
+                std::cout << "Margin Level: " << margin_level_struct.margin_level << std::endl;
+                std::cout << "=================" << std::endl;
+
                 table_rows.push_back(tr({
                     td({text(std::to_string(account.login))}),
                     td({text(account.name)}),
@@ -147,6 +160,20 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 td({ text("") }),
                 td({ text(total.currency) }),
             }));
+        }
+
+        std::cout << "Total: " << std::endl;
+        for (const auto& pair : totals_map) {
+            const Total& total = pair.second;
+
+            std::cout << "  Balance: " << format_for_AST(total.balance) << std::endl;
+            std::cout << "  Credit: " << format_for_AST(total.credit) << std::endl;
+            std::cout << "  Floating P/L: " << format_for_AST(total.floating_pl) << std::endl;
+            std::cout << "  Equity: " << format_for_AST(total.equity) << std::endl;
+            std::cout << "  Margin: " << format_for_AST(total.margin) << std::endl;
+            std::cout << "  Free Margin: " << format_for_AST(total.margin_free) << std::endl;
+            std::cout << "  Currency: " << total.currency << std::endl;
+            std::cout << "=================" << std::endl;
         }
 
         return table(table_rows, props({{"className", "data-table"}}));
