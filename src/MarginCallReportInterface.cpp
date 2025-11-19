@@ -92,12 +92,11 @@ extern "C" void CreateReport(rapidjson::Value& request,
         // Формирование строк
         for (const auto& account : accounts_vector) {
             // Открытые сделки аккаунта
-            std::vector<TradeRecord> trades_vector;
+            // std::vector<TradeRecord> trades_vector;
 
-            if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
-                std::cout << "Login: " << account.login << std::endl;
-                // std::cout << "Name: " << account.name << std::endl;
+            std::cout << "Login: " << account.login << std::endl;
 
+            // if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
                 // double floating_pl = 0.0;
                 // MarginLevel margin_level_struct;
                 //
@@ -145,7 +144,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 //     td({text(currency)}),
                 // }));
             }
-        }
+        // }
 
         // // Формирование строк Total
         // for (const auto& pair : totals_map) {
