@@ -106,7 +106,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
                 floating_pl = margin_level_struct.equity - margin_level_struct.balance;
 
-                std::string currency = get_group_currency(account.group);
+                // std::string currency = get_group_currency(account.group);
 
                 // auto& total = totals_map[currency];
 
