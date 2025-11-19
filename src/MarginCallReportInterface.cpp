@@ -46,13 +46,13 @@ extern "C" void CreateReport(rapidjson::Value& request,
     std::vector<GroupRecord> groups_vector;
 
     try {
-        server->GetAccountsByGroup(group_mask, &accounts_vector);
+        // server->GetAccountsByGroup(group_mask, &accounts_vector);
         server->GetAllGroups(&groups_vector);
     } catch (const std::exception& e) {
         std::cerr << "[MarginCallReportInterface]: " << e.what() << std::endl;
     }
 
-    std::cerr << "Accounts vector size: : " << accounts_vector.size() << std::endl;
+    // std::cerr << "Accounts vector size: : " << accounts_vector.size() << std::endl;
     std::cerr << "Groups vector size: : " << groups_vector.size() << std::endl;
 
     // Лямбда для поиска валюты аккаунта по его группе
@@ -73,7 +73,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     // };
 
     // Таблица
-    auto make_table = [&](const std::vector<GroupRecord>& accounts) -> Node {
+    auto make_table = [&](const std::vector<AccountRecord>& accounts) -> Node {
         std::vector<Node> table_rows;
 
         // Заголовки
@@ -183,7 +183,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     const Node report = div({
         h1({ text("Margin Call Report") }),
-        make_table(groups_vector)
+        make_table(accounts_vector)
     }, props({{"className", "report"}}));
 
     to_json(report, response, allocator);
