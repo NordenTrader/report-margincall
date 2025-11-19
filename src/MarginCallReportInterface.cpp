@@ -106,23 +106,18 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
                 floating_pl = margin_level_struct.equity - margin_level_struct.balance;
 
-                std::string currency;
-                try {
-                    currency = get_group_currency(account.group);
-                } catch (const std::exception& e) {
-                    std::cerr << "[MarginCallReportInterface]: get_group_currency: " << e.what() << std::endl;
-                }
+                std::string currency = get_group_currency(account.group);
 
-                auto& total = totals_map[currency];
+                // auto& total = totals_map[currency];
 
-                total.currency = currency;
-                total.balance += margin_level_struct.balance;
-                total.credit += margin_level_struct.credit;
-                total.floating_pl += floating_pl;
-                total.equity += margin_level_struct.equity;
-                total.margin += margin_level_struct.margin;
-                total.margin_free += margin_level_struct.margin_free;
-
+                // total.currency = currency;
+                // total.balance += margin_level_struct.balance;
+                // total.credit += margin_level_struct.credit;
+                // total.floating_pl += floating_pl;
+                // total.equity += margin_level_struct.equity;
+                // total.margin += margin_level_struct.margin;
+                // total.margin_free += margin_level_struct.margin_free;
+                //
                 std::cout << "=================" << std::endl;
                 std::cout << "Login: " << account.login << std::endl;
                 std::cout << "Name: " << account.name << std::endl;
@@ -154,33 +149,33 @@ extern "C" void CreateReport(rapidjson::Value& request,
         }
 
         // Формирование строк Total
-        for (const auto& pair : totals_map) {
-            const Total& total = pair.second;
-
-            std::cout << "  Balance: " << format_for_AST(total.balance) << std::endl;
-            std::cout << "  Credit: " << format_for_AST(total.credit) << std::endl;
-            std::cout << "  Floating P/L: " << format_for_AST(total.floating_pl) << std::endl;
-            std::cout << "  Equity: " << format_for_AST(total.equity) << std::endl;
-            std::cout << "  Margin: " << format_for_AST(total.margin) << std::endl;
-            std::cout << "  Free Margin: " << format_for_AST(total.margin_free) << std::endl;
-            std::cout << "  Currency: " << total.currency << std::endl;
-            std::cout << "=================" << std::endl;
-
-            table_rows.push_back(tr({
-                td({ text("TOTAL") }),
-                td({ text("") }),
-                td({ text("") }),
-                td({ text(format_for_AST(total.balance)) }),
-                td({ text(format_for_AST(total.credit)) }),
-                td({ text(format_for_AST(total.floating_pl)) }),
-                td({ text(format_for_AST(total.equity)) }),
-                td({ text(format_for_AST(total.margin)) }),
-                td({ text(format_for_AST(total.margin_free)) }),
-                td({ text("") }),
-                td({ text("") }),
-                td({ text(total.currency) }),
-            }));
-        }
+        // for (const auto& pair : totals_map) {
+        //     const Total& total = pair.second;
+        //
+        //     std::cout << "  Balance: " << format_for_AST(total.balance) << std::endl;
+        //     std::cout << "  Credit: " << format_for_AST(total.credit) << std::endl;
+        //     std::cout << "  Floating P/L: " << format_for_AST(total.floating_pl) << std::endl;
+        //     std::cout << "  Equity: " << format_for_AST(total.equity) << std::endl;
+        //     std::cout << "  Margin: " << format_for_AST(total.margin) << std::endl;
+        //     std::cout << "  Free Margin: " << format_for_AST(total.margin_free) << std::endl;
+        //     std::cout << "  Currency: " << total.currency << std::endl;
+        //     std::cout << "=================" << std::endl;
+        //
+        //     table_rows.push_back(tr({
+        //         td({ text("TOTAL") }),
+        //         td({ text("") }),
+        //         td({ text("") }),
+        //         td({ text(format_for_AST(total.balance)) }),
+        //         td({ text(format_for_AST(total.credit)) }),
+        //         td({ text(format_for_AST(total.floating_pl)) }),
+        //         td({ text(format_for_AST(total.equity)) }),
+        //         td({ text(format_for_AST(total.margin)) }),
+        //         td({ text(format_for_AST(total.margin_free)) }),
+        //         td({ text("") }),
+        //         td({ text("") }),
+        //         td({ text(total.currency) }),
+        //     }));
+        // }
 
         return table(table_rows, props({{"className", "data-table"}}));
     };
