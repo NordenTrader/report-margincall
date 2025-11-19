@@ -104,6 +104,9 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 server->GetAccountBalanceByLogin(account.login, &margin_level_struct);
 
                 floating_pl = margin_level_struct.equity - margin_level_struct.balance;
+
+                std::cout << "Loaded groups: " << groups_vector.size() << std::endl;
+
                 std::string currency = get_group_currency(account.group);
 
                 std::cout << "Account group: " << account.group << std::endl;
