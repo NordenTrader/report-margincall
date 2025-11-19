@@ -52,6 +52,8 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::cerr << "[MarginCallReportInterface]: " << e.what() << std::endl;
     }
 
+    std::cout << "Loaded groups: " << groups_vector.size() << std::endl;
+
     // Лямбда для поиска валюты аккаунта по его группе
     auto get_group_currency = [&](const std::string& group_name) -> std::string {
         std::cout << "Group name: " << group_name << std::endl;
@@ -105,7 +107,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
                 floating_pl = margin_level_struct.equity - margin_level_struct.balance;
 
-                std::cout << "Loaded groups: " << groups_vector.size() << std::endl;
+                std::cout << "Loaded groups(2): " << groups_vector.size() << std::endl;
 
                 std::string currency = get_group_currency(account.group);
 
