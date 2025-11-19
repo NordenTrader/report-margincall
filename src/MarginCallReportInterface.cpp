@@ -90,12 +90,12 @@ extern "C" void CreateReport(rapidjson::Value& request,
         }));
 
         // Формирование строк
-        for (const auto& account : accounts_vector) {
+        for (const auto& account : accounts) {
             // Открытые сделки аккаунта
             std::vector<TradeRecord> trades_vector;
 
             // if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
-            if (account.margin.level_type > 0) {
+            if (account.margin.level_type == MARGINLEVEL_MARGINCALL || account.margin.level_type == MARGINLEVEL_STOPOUT) {
                 double floating_pl = 0.0;
                 MarginLevel margin_level_struct;
 
