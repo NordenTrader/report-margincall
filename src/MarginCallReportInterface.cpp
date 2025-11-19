@@ -73,7 +73,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     // };
 
     // Таблица
-    auto make_table = [&](const std::vector<AccountRecord>& accounts) -> Node {
+    auto make_table = [&](const std::vector<GroupRecord>& accounts) -> Node {
         std::vector<Node> table_rows;
 
         // Заголовки
@@ -183,7 +183,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     const Node report = div({
         h1({ text("Margin Call Report") }),
-        make_table(accounts_vector)
+        make_table(groups_vector)
     }, props({{"className", "report"}}));
 
     to_json(report, response, allocator);
