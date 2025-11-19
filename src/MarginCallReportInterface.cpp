@@ -52,9 +52,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::cerr << "[MarginCallReportInterface]: " << e.what() << std::endl;
     }
 
-    std::cout << "=================" << std::endl;
-    std::cout << "Loaded groups: " << groups_vector.size() << std::endl;
-
     // Лямбда для поиска валюты аккаунта по его группе
     auto get_group_currency = [&](const std::string& group_name) -> std::string {
         for (const auto& group : groups_vector) {
@@ -98,12 +95,15 @@ extern "C" void CreateReport(rapidjson::Value& request,
             std::vector<TradeRecord> trades_vector;
 
             if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
-                double floating_pl = 0.0;
-                MarginLevel margin_level_struct;
+                std::cout << "Login: " << account.login << std::endl;
+                std::cout << "Name: " << account.name << std::endl;
 
-                server->GetAccountBalanceByLogin(account.login, &margin_level_struct);
-
-                floating_pl = margin_level_struct.equity - margin_level_struct.balance;
+                // double floating_pl = 0.0;
+                // MarginLevel margin_level_struct;
+                //
+                // server->GetAccountBalanceByLogin(account.login, &margin_level_struct);
+                //
+                // floating_pl = margin_level_struct.equity - margin_level_struct.balance;
 
                 // std::string currency = get_group_currency(account.group);
                 //
@@ -117,33 +117,33 @@ extern "C" void CreateReport(rapidjson::Value& request,
                 // total.margin += margin_level_struct.margin;
                 // total.margin_free += margin_level_struct.margin_free;
 
-                std::cout << "=================" << std::endl;
-                std::cout << "Login: " << account.login << std::endl;
-                std::cout << "Name: " << account.name << std::endl;
-                std::cout << "Leverage: " << margin_level_struct.leverage << std::endl;
-                std::cout << "Balance: " << margin_level_struct.balance << std::endl;
-                std::cout << "Credit: " << margin_level_struct.credit << std::endl;
-                std::cout << "Floating P/L: " << floating_pl << std::endl;
-                std::cout << "Equity: " << margin_level_struct.equity << std::endl;
-                std::cout << "Margin: " << margin_level_struct.margin << std::endl;
-                std::cout << "Free Margin: " << margin_level_struct.margin_free << std::endl;
-                std::cout << "Margin Level: " << margin_level_struct.margin_level << std::endl;
+                // std::cout << "=================" << std::endl;
+                // std::cout << "Login: " << account.login << std::endl;
+                // std::cout << "Name: " << account.name << std::endl;
+                // std::cout << "Leverage: " << margin_level_struct.leverage << std::endl;
+                // std::cout << "Balance: " << margin_level_struct.balance << std::endl;
+                // std::cout << "Credit: " << margin_level_struct.credit << std::endl;
+                // std::cout << "Floating P/L: " << floating_pl << std::endl;
+                // std::cout << "Equity: " << margin_level_struct.equity << std::endl;
+                // std::cout << "Margin: " << margin_level_struct.margin << std::endl;
+                // std::cout << "Free Margin: " << margin_level_struct.margin_free << std::endl;
+                // std::cout << "Margin Level: " << margin_level_struct.margin_level << std::endl;
                 // std::cout << "Currency: " << currency << std::endl;
-                std::cout << "=================" << std::endl;
+                // std::cout << "=================" << std::endl;
 
-                table_rows.push_back(tr({
-                    td({text(std::to_string(account.login))}),
-                    td({text(account.name)}),
-                    td({text(format_for_AST(margin_level_struct.leverage))}),
-                    td({text(format_for_AST(margin_level_struct.balance))}),
-                    td({text(format_for_AST(margin_level_struct.credit))}),
-                    td({text(format_for_AST(floating_pl))}),
-                    td({text(format_for_AST(margin_level_struct.equity))}),
-                    td({text(format_for_AST(margin_level_struct.margin))}),
-                    td({text(format_for_AST(margin_level_struct.margin_free))}),
-                    td({text(format_for_AST(margin_level_struct.margin_level))}),
-                    // td({text(currency)}),
-                }));
+                // table_rows.push_back(tr({
+                //     td({text(std::to_string(account.login))}),
+                //     td({text(account.name)}),
+                //     td({text(format_for_AST(margin_level_struct.leverage))}),
+                //     td({text(format_for_AST(margin_level_struct.balance))}),
+                //     td({text(format_for_AST(margin_level_struct.credit))}),
+                //     td({text(format_for_AST(floating_pl))}),
+                //     td({text(format_for_AST(margin_level_struct.equity))}),
+                //     td({text(format_for_AST(margin_level_struct.margin))}),
+                //     td({text(format_for_AST(margin_level_struct.margin_free))}),
+                //     td({text(format_for_AST(margin_level_struct.margin_level))}),
+                //     td({text(currency)}),
+                // }));
             }
         }
 
