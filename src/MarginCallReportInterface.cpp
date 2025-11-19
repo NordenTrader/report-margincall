@@ -96,7 +96,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
             if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
                 std::cout << "Login: " << account.login << std::endl;
-                std::cout << "Name: " << account.name << std::endl;
+                // std::cout << "Name: " << account.name << std::endl;
 
                 // double floating_pl = 0.0;
                 // MarginLevel margin_level_struct;
