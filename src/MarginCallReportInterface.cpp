@@ -25,17 +25,17 @@ extern "C" void CreateReport(rapidjson::Value& request,
                              rapidjson::Document::AllocatorType& allocator,
                              CServerInterface* server) {
     // Структура накопления итогов
-    struct Total {
-        std::string currency;
-        double balance = 0.0;
-        double credit = 0.0;
-        double floating_pl = 0.0;
-        double equity = 0.0;
-        double margin = 0.0;
-        double margin_free = 0.0;
-    };
-
-    std::unordered_map<std::string, Total> totals_map;
+    // struct Total {
+    //     std::string currency;
+    //     double balance = 0.0;
+    //     double credit = 0.0;
+    //     double floating_pl = 0.0;
+    //     double equity = 0.0;
+    //     double margin = 0.0;
+    //     double margin_free = 0.0;
+    // };
+    //
+    // std::unordered_map<std::string, Total> totals_map;
 
     std::string group_mask;
     if (request.HasMember("group") && request["group"].IsString()) {
@@ -53,23 +53,24 @@ extern "C" void CreateReport(rapidjson::Value& request,
     }
 
     std::cerr << "Accounts vector size: : " << accounts_vector.size() << std::endl;
+    std::cerr << "Groups vector size: : " << groups_vector.size() << std::endl;
 
     // Лямбда для поиска валюты аккаунта по его группе
-    auto get_group_currency = [&](const std::string& group_name) -> std::string {
-        for (const auto& group : groups_vector) {
-            if (group.group == group_name) {
-                return group.currency;
-            }
-        }
-        return "N/A"; // группа не найдена - валюта не определена
-    };
+    // auto get_group_currency = [&](const std::string& group_name) -> std::string {
+    //     for (const auto& group : groups_vector) {
+    //         if (group.group == group_name) {
+    //             return group.currency;
+    //         }
+    //     }
+    //     return "N/A"; // группа не найдена - валюта не определена
+    // };
 
     // Лямбда подготавливающая значения double для вставки в AST (округление до 2х знаков)
-    auto format_for_AST = [](double value) -> std::string {
-        std::ostringstream oss;
-        oss << std::fixed << std::setprecision(2) << value;
-        return oss.str();
-    };
+    // auto format_for_AST = [](double value) -> std::string {
+    //     std::ostringstream oss;
+    //     oss << std::fixed << std::setprecision(2) << value;
+    //     return oss.str();
+    // };
 
     // Таблица
     auto make_table = [&](const std::vector<AccountRecord>& accounts) -> Node {
