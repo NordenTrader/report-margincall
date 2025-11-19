@@ -49,11 +49,12 @@ extern "C" void CreateReport(rapidjson::Value& request,
         server->GetAccountsByGroup(group_mask, &accounts_vector);
         server->GetAllGroups(&groups_vector);
     } catch (const std::exception& e) {
-        std::cout << "[MarginCallReportInterface]: " << e.what() << std::endl;
+        std::cerr << "[MarginCallReportInterface]: " << e.what() << std::endl;
     }
 
     // Лямбда для поиска валюты аккаунта по его группе
     auto get_group_currency = [&](const std::string& group_name) -> std::string {
+        std::cout << "Group name: " << group_name << std::endl;
         for (const auto& group : groups_vector) {
             if (group.group == group_name) {
                 return group.currency;
@@ -102,6 +103,9 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
                 floating_pl = margin_level_struct.equity - margin_level_struct.balance;
                 std::string currency = get_group_currency(account.group);
+
+                std::cout << "Account group: " << account.group << std::endl;
+                std::cout << "Currency: " << currency << std::endl;
 
                 auto& total = totals_map[currency];
 
