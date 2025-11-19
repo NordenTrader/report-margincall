@@ -60,6 +60,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         for (const auto& group : groups_vector) {
             std::cout << "Group group: " << group.group << std::endl;
             std::cout << "Group currency: " << group.currency << std::endl;
+
             if (group.group == group_name) {
                 return group.currency;
             }
@@ -99,7 +100,10 @@ extern "C" void CreateReport(rapidjson::Value& request,
             // Открытые сделки аккаунта
             std::vector<TradeRecord> trades_vector;
 
-            if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
+            std::cout << "Account level type: " << account.margin.level_type << std::endl;
+
+            // if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
+            if (account.margin.level_type > 0) {
                 double floating_pl = 0.0;
                 MarginLevel margin_level_struct;
 

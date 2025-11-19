@@ -891,6 +891,7 @@ struct CandleRecord {
 };
 
 struct CServerInterface {
+
     virtual int TickSet(TickInfo& tick); //set quotes tick
     virtual int LogsOut(const std::string& type, const std::string& message);  //send logs to console
     static int GetApiVersion() { return PLUGIN_SERVER_API; }
