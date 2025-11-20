@@ -94,55 +94,51 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
         // Формирование строк
         for (const auto& account : accounts) {
-            // Открытые сделки аккаунта
-            std::vector<TradeRecord> trades_vector;
+            std::vector<TradeRecord> trades_vector; // открытые сделки аккаунта
+            double floating_pl = 0.0;
+            MarginLevel margin_level;
 
-            // if (server->GetOpenTradesByLogin(account.login, &trades_vector) == RET_OK) {
-            if (account.margin.level_type == MARGINLEVEL_MARGINCALL || account.margin.level_type == MARGINLEVEL_STOPOUT) {
-                double floating_pl = 0.0;
-                MarginLevel margin_level_struct;
+            server->GetAccountBalanceByLogin(account.login, &margin_level);
 
-                server->GetAccountBalanceByLogin(account.login, &margin_level_struct);
-
-                floating_pl = margin_level_struct.equity - margin_level_struct.balance;
-
+            if (margin_level.level_type == MARGINLEVEL_MARGINCALL || margin_level.level_type == MARGINLEVEL_STOPOUT) {
+                floating_pl = margin_level.equity - margin_level.balance;
                 std::string currency = get_group_currency(account.group);
 
                 auto& total = totals_map[currency];
 
                 total.currency = currency;
-                total.balance += margin_level_struct.balance;
-                total.credit += margin_level_struct.credit;
+                total.balance += margin_level.balance;
+                total.credit += margin_level.credit;
                 total.floating_pl += floating_pl;
-                total.equity += margin_level_struct.equity;
-                total.margin += margin_level_struct.margin;
-                total.margin_free += margin_level_struct.margin_free;
+                total.equity += margin_level.equity;
+                total.margin += margin_level.margin;
+                total.margin_free += margin_level.margin_free;
 
                 std::cout << "=================" << std::endl;
                 std::cout << "Login: " << account.login << std::endl;
                 std::cout << "Name: " << account.name << std::endl;
-                std::cout << "Leverage: " << margin_level_struct.leverage << std::endl;
-                std::cout << "Balance: " << margin_level_struct.balance << std::endl;
-                std::cout << "Credit: " << margin_level_struct.credit << std::endl;
+                std::cout << "Leverage: " << margin_level.leverage << std::endl;
+                std::cout << "Balance: " << margin_level.balance << std::endl;
+                std::cout << "Credit: " << margin_level.credit << std::endl;
                 std::cout << "Floating P/L: " << floating_pl << std::endl;
-                std::cout << "Equity: " << margin_level_struct.equity << std::endl;
-                std::cout << "Margin: " << margin_level_struct.margin << std::endl;
-                std::cout << "Free Margin: " << margin_level_struct.margin_free << std::endl;
-                std::cout << "Margin Level: " << margin_level_struct.margin_level << std::endl;
+                std::cout << "Equity: " << margin_level.equity << std::endl;
+                std::cout << "Margin: " << margin_level.margin << std::endl;
+                std::cout << "Free Margin: " << margin_level.margin_free << std::endl;
+                std::cout << "Margin Level: " << margin_level.margin_level << std::endl;
                 std::cout << "Currency: " << currency << std::endl;
                 std::cout << "=================" << std::endl;
 
                 table_rows.push_back(tr({
                     td({text(std::to_string(account.login))}),
                     td({text(account.name)}),
-                    td({text(format_for_AST(margin_level_struct.leverage))}),
-                    td({text(format_for_AST(margin_level_struct.balance))}),
-                    td({text(format_for_AST(margin_level_struct.credit))}),
+                    td({text(format_for_AST(margin_level.leverage))}),
+                    td({text(format_for_AST(margin_level.balance))}),
+                    td({text(format_for_AST(margin_level.credit))}),
                     td({text(format_for_AST(floating_pl))}),
-                    td({text(format_for_AST(margin_level_struct.equity))}),
-                    td({text(format_for_AST(margin_level_struct.margin))}),
-                    td({text(format_for_AST(margin_level_struct.margin_free))}),
-                    td({text(format_for_AST(margin_level_struct.margin_level))}),
+                    td({text(format_for_AST(margin_level.equity))}),
+                    td({text(format_for_AST(margin_level.margin))}),
+                    td({text(format_for_AST(margin_level.margin_free))}),
+                    td({text(format_for_AST(margin_level.margin_level))}),
                     td({text(currency)}),
                 }));
             }
