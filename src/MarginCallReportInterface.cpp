@@ -214,7 +214,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::vector<Node> table_rows;
 
         // Заголовки
-        table_rows.push_back(table({
+        table_rows.push_back(thead({
             tr({
                 th({ text("Login") }),
                 th({ text("Name") }),
@@ -300,99 +300,99 @@ extern "C" void CreateReport(rapidjson::Value& request,
     response.SetObject();
 
     // UI
-    rapidjson::Value uiObj(kObjectType);
+    rapidjson::Value ui_object(kObjectType);
 
     // Modal
-    rapidjson::Value modalObj(kObjectType);
+    rapidjson::Value modal_object(kObjectType);
 
     // size: "xxxl"
-    modalObj.AddMember("size", rapidjson::Value("xxxl", allocator), allocator);
+    modal_object.AddMember("size", rapidjson::Value("xxxl", allocator), allocator);
 
-    // headerContent
+    // header_content
     {
-        rapidjson::Value headerContent(kArrayType);
+        rapidjson::Value header_content(kArrayType);
 
         // Space → #text → {value: ...}
         rapidjson::Value space(kObjectType);
         space.AddMember("type", rapidjson::Value("Space", allocator), allocator);
 
-        rapidjson::Value spaceChildren(kArrayType);
+        rapidjson::Value space_children(kArrayType);
 
-        rapidjson::Value textNode(kObjectType);
-        textNode.AddMember("type", rapidjson::Value("#text", allocator), allocator);
+        rapidjson::Value text_node(kObjectType);
+        text_node.AddMember("type", rapidjson::Value("#text", allocator), allocator);
 
-        rapidjson::Value textProps(kObjectType);
-        textProps.AddMember("value", rapidjson::Value("Report"), allocator);
+        rapidjson::Value text_props(kObjectType);
+        text_props.AddMember("value", rapidjson::Value("Report"), allocator);
 
-        textNode.AddMember("props", textProps, allocator);
-        spaceChildren.PushBack(textNode, allocator);
+        text_node.AddMember("props", text_props, allocator);
+        space_children.PushBack(text_node, allocator);
 
-        space.AddMember("children", spaceChildren, allocator);
-        headerContent.PushBack(space, allocator);
+        space.AddMember("children", space_children, allocator);
+        header_content.PushBack(space, allocator);
 
-        modalObj.AddMember("headerContent", headerContent, allocator);
+        modal_object.AddMember("headerContent", header_content, allocator);
     }
 
-    // footerContent
+    // footer_content
     {
-        rapidjson::Value footerContent(kArrayType);
+        rapidjson::Value footer_content(kArrayType);
 
         rapidjson::Value space(kObjectType);
         space.AddMember("type", rapidjson::Value("Space", allocator), allocator);
 
-        rapidjson::Value spaceProps(kObjectType);
-        spaceProps.AddMember("justifyContent", rapidjson::Value("space-between", allocator), allocator);
-        space.AddMember("props", spaceProps, allocator);
+        rapidjson::Value space_props(kObjectType);
+        space_props.AddMember("justifyContent", rapidjson::Value("space-between", allocator), allocator);
+        space.AddMember("props", space_props, allocator);
 
-        rapidjson::Value spaceChildren(kArrayType);
+        rapidjson::Value space_children(kArrayType);
 
         rapidjson::Value button(kObjectType);
         button.AddMember("type", rapidjson::Value("Button", allocator), allocator);
 
-        rapidjson::Value btnProps(kObjectType);
-        btnProps.AddMember("className", rapidjson::Value("form_action_button", allocator), allocator);
-        btnProps.AddMember("borderType", rapidjson::Value("danger", allocator), allocator);
-        btnProps.AddMember("buttonType", rapidjson::Value("outlined", allocator), allocator);
-        btnProps.AddMember("onClick", rapidjson::Value("{\"action\":\"CloseModal\"}", allocator), allocator);
-        button.AddMember("props", btnProps, allocator);
+        rapidjson::Value btn_props(kObjectType);
+        btn_props.AddMember("className", rapidjson::Value("form_action_button", allocator), allocator);
+        btn_props.AddMember("borderType", rapidjson::Value("danger", allocator), allocator);
+        btn_props.AddMember("buttonType", rapidjson::Value("outlined", allocator), allocator);
+        btn_props.AddMember("onClick", rapidjson::Value("{\"action\":\"CloseModal\"}", allocator), allocator);
+        button.AddMember("props", btn_props, allocator);
 
-        rapidjson::Value btnChildren(kArrayType);
+        rapidjson::Value btn_children(kArrayType);
 
-        rapidjson::Value btnText(kObjectType);
-        btnText.AddMember("type", rapidjson::Value("#text", allocator), allocator);
+        rapidjson::Value btn_text(kObjectType);
+        btn_text.AddMember("type", rapidjson::Value("#text", allocator), allocator);
 
-        rapidjson::Value btnTextProps(kObjectType);
-        btnTextProps.AddMember("value", rapidjson::Value("Close", allocator), allocator);
-        btnText.AddMember("props", btnTextProps, allocator);
+        rapidjson::Value btn_text_props(kObjectType);
+        btn_text_props.AddMember("value", rapidjson::Value("Close", allocator), allocator);
+        btn_text.AddMember("props", btn_text_props, allocator);
 
-        btnChildren.PushBack(btnText, allocator);
+        btn_children.PushBack(btn_text, allocator);
 
-        button.AddMember("children", btnChildren, allocator);
+        button.AddMember("children", btn_children, allocator);
 
-        spaceChildren.PushBack(button, allocator);
+        space_children.PushBack(button, allocator);
 
-        space.AddMember("children", spaceChildren, allocator);
-        footerContent.PushBack(space, allocator);
+        space.AddMember("children", space_children, allocator);
+        footer_content.PushBack(space, allocator);
 
-        modalObj.AddMember("footerContent", footerContent, allocator);
+        modal_object.AddMember("footerContent", footer_content, allocator);
     }
 
     // content: [ report AST ]
     {
         rapidjson::Value content(kArrayType);
 
-        rapidjson::Value reportJson(kObjectType);
-        to_json(report, reportJson, allocator); // сериализация AST
+        rapidjson::Value report_json(kObjectType);
+        to_json(report, report_json, allocator); // сериализация AST
 
-        content.PushBack(reportJson, allocator);
-        modalObj.AddMember("content", content, allocator);
+        content.PushBack(report_json, allocator);
+        modal_object.AddMember("content", content, allocator);
     }
 
     // ui.modal
-    uiObj.AddMember("modal", modalObj, allocator);
+    ui_object.AddMember("modal", modal_object, allocator);
 
     // response.ui
-    response.AddMember("ui", uiObj, allocator);
+    response.AddMember("ui", ui_object, allocator);
 
     to_json(report, response, allocator);
 }
