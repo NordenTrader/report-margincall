@@ -173,6 +173,9 @@ extern "C" void CreateReport(rapidjson::Value& request,
             }));
         }
 
+
+        std::cout << "===== TEST =====" << std::endl;
+
         return table(table_rows, props({{"className", "data-table"}}));
     };
 
