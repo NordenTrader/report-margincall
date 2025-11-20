@@ -52,9 +52,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
         std::cerr << "[MarginCallReportInterface]: " << e.what() << std::endl;
     }
 
-    std::cout << "Accounts vector size: " << accounts_vector.size() << std::endl;
-    std::cout << "Groups vector size: " << groups_vector.size() << std::endl;
-
     // Лямбда для поиска валюты аккаунта по группе
     auto get_group_currency = [&](const std::string& group_name) -> std::string {
         for (const auto& group : groups_vector) {
@@ -132,8 +129,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
         }
 
         // Формирование строк Total
-        std::cout << "TOTAL:" << std::endl;
-
         for (const auto& pair : totals_map) {
             const Total& total = pair.second;
 
