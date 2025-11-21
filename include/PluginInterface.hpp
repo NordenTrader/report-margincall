@@ -9,6 +9,7 @@
 #include <string>
 #include "Structures.hpp"
 #include "ast/ast.hpp"
+#include "Utils.hpp"
 
 extern "C" {
     void AboutReport(rapidjson::Value& request,
@@ -22,10 +23,4 @@ extern "C" {
                      rapidjson::Value& response,
                      rapidjson::Document::AllocatorType& allocator,
                      CServerInterface* server);
-}
-
-namespace report_utils {
-    void CreateUI(const ast::Node& node,
-                  rapidjson::Value& response,
-                  rapidjson::Document::AllocatorType& allocator);
 }
