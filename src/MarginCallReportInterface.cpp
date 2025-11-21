@@ -177,10 +177,14 @@ extern "C" void CreateReport(rapidjson::Value& request,
     };
 
 
-    const Node report = div({
-        h1({ text("Margin Call Report") }),
-        make_table(accounts_vector),
-    }, report_props);
+    // const Node report = div({
+    //     h1({ text("Margin Call Report") }),
+    //     make_table(accounts_vector),
+    // }, report_props);
+
+    const Node report = {
+        element("ui")
+    };
 
     to_json(report, response, allocator);
 }
