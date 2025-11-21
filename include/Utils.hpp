@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ast/ast.hpp"
+#include "Structures.hpp"
 
 namespace utils {
     void CreateUI(const ast::Node& node,

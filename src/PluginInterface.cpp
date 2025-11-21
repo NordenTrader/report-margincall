@@ -1,7 +1,5 @@
 #include "PluginInterface.hpp"
 
-#include <iomanip>
-
 using namespace ast;
 
 extern "C" void AboutReport(rapidjson::Value& request,
