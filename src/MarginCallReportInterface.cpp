@@ -159,7 +159,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         make_table(accounts_vector),
     }, report_props);
 
-    to_json(report, response, allocator);
+    create_modal_ui(report, response, allocator);
 }
 
 //
