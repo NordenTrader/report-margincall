@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(MarginCallReport SHARED
         src/PluginInterface.cpp
+        src/Utils.cpp
 )
 
 target_include_directories(MarginCallReport PRIVATE

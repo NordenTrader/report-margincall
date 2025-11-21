@@ -14,10 +14,10 @@ namespace utils {
         model_object.AddMember("footerContent", Value(kArrayType), allocator);
         model_object.AddMember("content", content_array, allocator);
 
-        Value uiObj(kObjectType);
-        uiObj.AddMember("modal", model_object, allocator);
+        Value ui_object(kObjectType);
+        ui_object.AddMember("modal", model_object, allocator);
 
         response.SetObject();
-        response.AddMember("ui", uiObj, allocator);
+        response.AddMember("ui", ui_object, allocator);
     }
 }
