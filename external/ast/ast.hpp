@@ -219,24 +219,24 @@ inline std::string stringify(const Node& node) {
 
 inline std::vector<Node> none() { return {}; }
     
-inline void create_modal_ui(const Node& node, Value& out, Document::AllocatorType& alloc) {
-    Value node_object(kObjectType);
-    to_json(node, node_object, alloc);
-
-    Value content_array(kArrayType);
-    content_array.PushBack(node_object, alloc);
-
-    Value model_object(kObjectType);
-    model_object.AddMember("size", "xxxl", alloc);
-    model_object.AddMember("headerContent", Value(kArrayType), alloc);
-    model_object.AddMember("footerContent", Value(kArrayType), alloc);
-    model_object.AddMember("content", content_array, alloc);
-
-    Value uiObj(kObjectType);
-    uiObj.AddMember("modal", model_object, alloc);
-
-    out.SetObject();
-    out.AddMember("ui", uiObj, alloc);
-}
+// inline void create_modal_ui(const Node& node, Value& out, Document::AllocatorType& alloc) {
+//     Value node_object(kObjectType);
+//     to_json(node, node_object, alloc);
+//
+//     Value content_array(kArrayType);
+//     content_array.PushBack(node_object, alloc);
+//
+//     Value model_object(kObjectType);
+//     model_object.AddMember("size", "xxxl", alloc);
+//     model_object.AddMember("headerContent", Value(kArrayType), alloc);
+//     model_object.AddMember("footerContent", Value(kArrayType), alloc);
+//     model_object.AddMember("content", content_array, alloc);
+//
+//     Value uiObj(kObjectType);
+//     uiObj.AddMember("modal", model_object, alloc);
+//
+//     out.SetObject();
+//     out.AddMember("ui", uiObj, alloc);
+// }
 
 } // namespace ast

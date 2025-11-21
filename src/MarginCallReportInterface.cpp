@@ -159,54 +159,28 @@ extern "C" void CreateReport(rapidjson::Value& request,
         make_table(accounts_vector),
     }, report_props);
 
-    create_modal_ui(report, response, allocator);
+    report_utils::CreateUI(report, response, allocator);
 }
 
-//
-// ui: {
-//     modal: {
-//         size: "xxxl",
-//         headerContent: [
-//           {
-//             type: "Space",
-//             children: [
-//               {
-//                 type: "#text",
-//                 props: {
-//                   value: row.name
-//                 },
-//               },
-//             ],
-//           },
-//         ],
-//         footerContent: [
-//           {
-//             type: "Space",
-//             props: {
-//               justifyContent: "space-between"
-//             },
-//             children: [
-//               {
-//                 type: "Button",
-//                 props: {
-//                   className: "form_action_button",
-//                   borderType: "danger",
-//                   buttonType: "outlined",
-//                   onClick: "{\"action\":\"CloseModal\"}",
-//                 },
-//                 children: [
-//                   {
-//                     type: "#text",
-//                     props: {
-//                       value: "Close"
-//                     },
-//                   },
-//                 ],
-//               },
-//             ],
-//           },
-//         ],
-//         content: [resp.data],
-//       },
-//     },
-//   };
+namespace report_utils {
+    void CreateUI(const ast::Node& node, rapidjson::Value& out, rapidjson::Document::AllocatorType& allocator) {
+        Value node_object(kObjectType);
+        to_json(node, node_object, allocator);
+
+        Value content_array(kArrayType);
+        content_array.PushBack(node_object, allocator);
+
+        Value model_object(kObjectType);
+        model_object.AddMember("size", "xxxl", allocator);
+        model_object.AddMember("headerContent", Value(kArrayType), allocator);
+        model_object.AddMember("footerContent", Value(kArrayType), allocator);
+        model_object.AddMember("content", content_array, allocator);
+
+        Value uiObj(kObjectType);
+        uiObj.AddMember("modal", model_object, allocator);
+
+        out.SetObject();
+        out.AddMember("ui", uiObj, allocator);
+    }
+
+}

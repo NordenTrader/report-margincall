@@ -23,3 +23,9 @@ extern "C" {
                      rapidjson::Document::AllocatorType& allocator,
                      CServerInterface* server);
 }
+
+namespace report_utils {
+    void CreateUI(const ast::Node& node,
+                  rapidjson::Value& out,
+                  rapidjson::Document::AllocatorType& allocator);
+}
